@@ -141,7 +141,3 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }
-
-
-# To prevent colision of .User
-AUTH_USER_MODEL = 'accounts.User'
