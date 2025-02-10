@@ -1,0 +1,13 @@
+django_daraja
+pillow
+crispy_bootstrap4
+django_crispy_forms
+django
+vercel
+gunicorn
+whitenoise
+pymysql
+djangorestframework
+djangorestframework-simplejwt
+django_filter
+django-redis
