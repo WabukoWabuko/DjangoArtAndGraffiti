@@ -1,12 +1,8 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import ArtUpload
 from .serializers import ArtworkSerializer
+from .permissions import IsArtistOrReadOnly
 
-class IsArtistOrReadOnly(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user.is_authenticated
 
 class ArtUploadViewSet(viewsets.ModelViewSet):
     queryset = ArtUpload.objects.all()

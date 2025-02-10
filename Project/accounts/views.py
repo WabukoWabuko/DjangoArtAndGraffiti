@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from .models import User
 from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
+from .permissions import IsOwnerOrReadOnly
 
 # Registration View
 class RegisterView(APIView):
@@ -47,7 +48,8 @@ class LogoutView(APIView):
 
 # Profile Management
 class ProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated] # Initial
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get(self, request):
         user = request.user

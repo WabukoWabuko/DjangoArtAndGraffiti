@@ -1,19 +1,13 @@
-from rest_framework import viewsets, permissions
-from .models import CommunityPost, Rating
-from .serializers import CommunityPostSerializer, RatingSerializer
+from rest_framework import viewsets
+from .models import Rating
+from .serializers import RatingSerializer
+from .permissions import IsAuthorOrReadOnly
 
-class CommunityPostViewSet(viewsets.ModelViewSet):
-    queryset = CommunityPost.objects.all()
-    serializer_class = CommunityPostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
 
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthorOrReadOnly]
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
