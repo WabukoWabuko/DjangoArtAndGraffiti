@@ -11,3 +11,5 @@ djangorestframework
 djangorestframework-simplejwt
 django_filter
 django-redis
+django-allauth
+dj-rest-auth
