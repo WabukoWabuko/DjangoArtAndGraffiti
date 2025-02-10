@@ -1,23 +1,22 @@
-"""
-URL configuration for Project project.
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from accounts.views import RegisterView, LoginView, LogoutView, ProfileView
+from events.views import EventViewSet
+from uploads.views import ArtUploadViewSet
+from artists.views import ArtistViewSet
+from community.views import CommunityPostViewSet, RatingViewSet
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-
-from django.contrib import admin
-from django.urls import path
+router = DefaultRouter()
+router.register(r'events', EventViewSet)
+router.register(r'uploads', ArtUploadViewSet)
+router.register(r'artists', ArtistViewSet)
+router.register(r'community-posts', CommunityPostViewSet)
+router.register(r'ratings', RatingViewSet)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('api/', include(router.urls)),
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/login/', LoginView.as_view(), name='login'),
+    path('api/logout/', LogoutView.as_view(), name='logout'),
+    path('api/profile/', ProfileView.as_view(), name='profile'),
 ]
