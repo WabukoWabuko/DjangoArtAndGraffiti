@@ -142,8 +142,6 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-SOCIAL_AUTH_GOOGLE_CLIENT_ID = '894285230969-3ue2gbc9aj5prl1l2qlsqihsje41m61j.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_SECRET = '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'
 
 # To prevent colision of .User
 AUTH_USER_MODEL = 'accounts.User'
