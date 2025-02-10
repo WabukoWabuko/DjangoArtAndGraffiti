@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
 from django.utils import timezone
 
@@ -29,6 +29,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+
+    # Adding related_name to avoid reverse accessor conflicts
+    groups = models.ManyToManyField(
+        Group,
+        related_name='custom_user_groups',  # Unique related_name
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='custom_user_permissions',  # Unique related_name
+        blank=True
+    )
 
     objects = UserManager()
 

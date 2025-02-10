@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 # Upcoming Events (Admin Only)
 class Event(models.Model):
