@@ -1,12 +1,21 @@
-from rest_framework import viewsets, status
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
-from django.contrib.auth import authenticate, login, logout
-from .models import User
-from .serializers import *
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from .permissions import IsOwnerOrReadOnly
+from .models import User
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer
+
+# Utility for Blacklisting Refresh Tokens
+def blacklist_token(request):
+    try:
+        refresh_token = request.data.get("refresh")
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+        return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
 
 # Registration View
 class RegisterView(APIView):
@@ -29,7 +38,6 @@ class LoginView(APIView):
         user = authenticate(request, email=email, password=password)
 
         if user:
-            login(request, user)
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
@@ -38,27 +46,23 @@ class LoginView(APIView):
             }, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-# Logout View
+# JWT Logout (Blacklisting Token)
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        logout(request)
-        return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+        return blacklist_token(request)
 
 # Profile Management
 class ProfileView(APIView):
-    # permission_classes = [IsAuthenticated] # Initial
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user
-        serializer = UserProfileSerializer(user)
+        serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
 
     def put(self, request):
-        user = request.user
-        serializer = UserProfileSerializer(user, data=request.data, partial=True)
+        serializer = UserProfileSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
