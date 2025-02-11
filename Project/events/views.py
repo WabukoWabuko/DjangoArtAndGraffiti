@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import Event
 from .serializers import EventSerializer
 from .permissions import IsAdminOrReadOnly
