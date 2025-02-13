@@ -6,6 +6,7 @@ import GoogleAuth from './components/Auth/GoogleAuth';
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
+
 const App = () => (
     <AuthProvider>
         <Router>
