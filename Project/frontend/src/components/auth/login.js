@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/authContext';
 import './Auth.css'; // Shared CSS for auth components
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -27,37 +28,45 @@ const Login = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Login</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <div>
-                <label htmlFor="email">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label htmlFor="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Password"
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <button type="submit" disabled={loading}>
-                {loading ? 'Logging in...' : 'Login'}
-            </button>
-        </form>
+        <div className="auth-container">
+            <div className="auth-card">
+            <form onSubmit={handleSubmit}>
+                <h2>Login</h2>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                
+                <div className="form-group">
+                        <label htmlFor="full_name">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Email"
+                            value={form.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            value={form.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Logging in...' : 'Login'}
+                </button>
+            </form>
+            <p className="auth-link">
+                    Already have an account? <Link to="/register">Register here</Link>
+                </p>
+        </div>
+        </div>
     );
 };
 
