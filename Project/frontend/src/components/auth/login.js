@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/authContext';
+import './Auth.css'; // Shared CSS for auth components
 
 const Login = () => {
     const [form, setForm] = useState({ email: '', password: '' });
