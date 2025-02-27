@@ -1,0 +1,31 @@
+.landing-page {
+    font-family: 'Arial', sans-serif;
+}
+
+.hero-section {
+    background: url('/public/images/adam-young-alBS5qhSAXA-unsplash.jpg') no-repeat center center/cover;
+    color: white;
+    padding: 100px 0;
+}
+
+.hero-section h1 {
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-section p {
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.features-section {
+    padding: 60px 0;
+}
+
+.feature-icon {
+    color: #007bff;
+}
+
+.footer {
+    background-color: #343a40;
+}
