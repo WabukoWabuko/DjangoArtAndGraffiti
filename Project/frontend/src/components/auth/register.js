@@ -1,13 +1,12 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import API from '../../api/axiosConfig';
-import './Auth.css'; // Shared CSS for auth components
+import { AuthContext } from '../../context/authContext';
+import './Auth.css';
 
 const Register = () => {
     const [form, setForm] = useState({ email: '', password: '', full_name: '' });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
+    const { register, error, user } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -17,15 +16,15 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError(null);
-        setSuccess(false);
-
         try {
-            await API.post('/auth/register/', form);
-            setSuccess(true);
-            setTimeout(() => navigate('/login'), 2000); // Redirect to login after 2 seconds
+            console.log('Submitting registration with:', form);
+            await register(form.email, form.full_name, form.password, form.password);
+            if (user) {
+                console.log('Registered as:', user);
+                navigate('/login');  // Redirect to login
+            }
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+            console.error('Registration error:', err);
         } finally {
             setLoading(false);
         }
@@ -36,7 +35,6 @@ const Register = () => {
             <div className="auth-card">
                 <h2>Register</h2>
                 {error && <p className="error-message">{error}</p>}
-                {success && <p className="success-message">Registration successful! Redirecting to login...</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="full_name">Full Name</label>

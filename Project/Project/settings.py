@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'uploads',
     'artists',
     'community',
+    'django.contrib.sites',
     # Third-party apps
     'allauth',
     'allauth.account',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     # for websockets and chatting
     'channels',
+    # Frontend connection
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +54,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware"
+    "allauth.account.middleware.AccountMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "Project.urls"
@@ -128,8 +132,9 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# Majority of Additional data
+# Required by allauth
 SITE_ID = 1
+AUTH_USER_MODEL = 'accounts.User'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -139,19 +144,49 @@ AUTHENTICATION_BACKENDS = (
 # Google OAuth configuration
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'APP': {
+            'client_id': '894285230969-3ue2gbc9aj5prl1l2qlsqihsje41m61j.apps.googleusercontent.com',  # From Google Cloud Console
+            'secret': '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',
+            'key': '',
+        },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    #'DEFAULT_PERMISSION_CLASSES': [
+     #   'rest_framework.permissions.IsAuthenticated',
+    #],
 }
+
+"""from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+}"""
+
+# Session settings
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default, stores in database
+#SESSION_COOKIE_AGE = 86400  # 24 hours in seconds (optional, adjust as needed)
+#SESSION_SAVE_EVERY_REQUEST = True  # Save session on every request (optional)
 
 ASGI_APPLICATION = 'graffiti_app.asgi.application'
 
@@ -159,4 +194,21 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer'
     }
+}
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000'] # React frontend url
+
+#  allauth settings
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # No username field
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGIN_METHODS = {'email'}
+
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF cookie if needed
+CORS_ALLOW_CREDENTIALS = False  # Allow cookies/credentials for CSRF
+
+REST_AUTH = {
+    'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
+    'REGISTER_SERIALIZER': 'accounts.serializers.UserRegistrationSerializer',
+    'LOGIN_SERIALIZER': 'accounts.serializers.UserLoginSerializer',
 }

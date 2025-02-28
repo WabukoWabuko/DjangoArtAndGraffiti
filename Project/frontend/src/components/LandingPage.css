@@ -1,31 +1,161 @@
+/* Import modern font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 .landing-page {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
 }
 
+/* Navbar */
+.navbar {
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(90deg, #1a1a1a, #2d2d2d);
+}
+
+.navbar-brand.text-glow {
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.nav-link.hover-effect {
+    color: #fff;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-link.hover-effect:hover {
+    color: #007bff;
+    transform: translateY(-2px);
+}
+
+/* Hero Section */
 .hero-section {
-    background: url('/public/images/adam-young-alBS5qhSAXA-unsplash.jpg') no-repeat center center/cover;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/public/images/adam-young-alBS5qhSAXA-unsplash.jpg') no-repeat center center/cover;
     color: white;
-    padding: 100px 0;
+    display: flex;
+    align-items: center;
 }
 
-.hero-section h1 {
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+.hero-section.fade-in {
+    animation: fadeIn 1.5s ease-in;
 }
 
-.hero-section p {
-    font-size: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
+.text-shadow {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+.btn-primary-gradient {
+    background: linear-gradient(45deg, #007bff, #00d2ff);
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+.btn-link.animate-bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Features Section */
 .features-section {
-    padding: 60px 0;
+    background: #f8f9fa;
+    padding: 80px 0;
+}
+
+.feature-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
     color: #007bff;
+    transition: color 0.3s ease;
 }
 
+.feature-card:hover .feature-icon {
+    color: #0056b3;
+}
+
+/* Footer */
 .footer {
-    background-color: #343a40;
+    background: linear-gradient(90deg, #1a1a1a, #2d2d2d);
+    color: #fff;
+}
+
+.footer a {
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-section p {
+        font-size: 1.2rem;
+    }
+
+    .btn-lg {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .feature-card {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+    }
 }

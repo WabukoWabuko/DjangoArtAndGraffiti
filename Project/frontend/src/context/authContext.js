@@ -1,5 +1,4 @@
-import { createContext, useState, useEffect, useCallback } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import { createContext, useState, useEffect } from 'react';
 import API from '../api/axiosConfig';
 
 export const AuthContext = createContext();
@@ -7,73 +6,78 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Function to decode and set the user from the token
-    const setUserFromToken = useCallback((token) => {
-        const decodedUser = jwtDecode(token);
-        setUser(decodedUser);
+    useEffect(() => {
+        // No session or token check; rely on frontend state
+        setLoading(false);
     }, []);
 
-    // Check for existing token on initial load
-    useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            setUserFromToken(token);
-        }
-        setLoading(false);
-    }, [setUserFromToken]);
-
-    // Function to handle user login
     const login = async (email, password) => {
         try {
+            console.log('Attempting login with:', { email, password });
             const { data } = await API.post('/auth/login/', { email, password });
-            localStorage.setItem('accessToken', data.access);
-            localStorage.setItem('refreshToken', data.refresh);
-            setUserFromToken(data.access);
-        } catch (error) {
-            console.error('Login failed:', error);
-            throw error; // Re-throw the error for handling in the component
-        }
-    };
-
-    // Function to handle user logout
-    const logout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        setUser(null);
-    };
-
-    // Function to refresh the access token
-    const refreshToken = async () => {
-        try {
-            const refreshToken = localStorage.getItem('refreshToken');
-            if (!refreshToken) {
-                throw new Error('No refresh token available');
+            console.log('Login response:', data);
+            if (data.error) {
+                throw new Error(data.error);
             }
-
-            const { data } = await API.post('/auth/refresh/', { refresh: refreshToken });
-            localStorage.setItem('accessToken', data.access);
-            setUserFromToken(data.access);
-            return data.access;
+            setUser(data.user);
+            setError(null);
         } catch (error) {
-            console.error('Token refresh failed:', error);
-            logout(); // Logout the user if token refresh fails
+            console.error('Login failed:', error.message);
+            setError(error.message || 'Invalid credentials or server error.');
             throw error;
         }
     };
 
-    // Provide the context value to the children
+    const register = async (email, fullName, password, password2) => {
+        try {
+            console.log('Attempting registration with:', { email, fullName, password, password2 });
+            const { data } = await API.post('/auth/register/', { 
+                email, 
+                full_name: fullName, 
+                password, 
+                password2 
+            });
+            console.log('Registration response:', data);
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            setUser(data.user);
+            setError(null);
+        } catch (error) {
+            console.error('Registration failed:', error.message);
+            setError(error.message || 'Registration failed. Please try again.');
+            throw error;
+        }
+    };
+
+    const logout = () => {
+        setUser(null);
+        setError(null);
+    };
+
     const contextValue = {
         user,
-        login,
-        logout,
-        refreshToken,
         loading,
+        error,
+        login,
+        register,
+        logout,
     };
+
+    if (error) {
+        return (
+            <div className="error-boundary">
+                <p>{error}</p>
+                <button onClick={() => setError(null)}>Retry</button>
+            </div>
+        );
+    }
 
     return (
         <AuthContext.Provider value={contextValue}>
-            {!loading && children}
+            {loading ? <div>Loading...</div> : children}
         </AuthContext.Provider>
     );
 };

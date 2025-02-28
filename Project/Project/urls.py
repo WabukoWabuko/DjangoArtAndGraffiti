@@ -1,25 +1,15 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from accounts.views import RegisterView, LoginView, LogoutView, ProfileView
-from events.views import EventViewSet
-from uploads.views import ArtUploadViewSet
-from artists.views import ArtistViewSet
-from community.views import CommunityPostViewSet, RatingViewSet
 from django.contrib import admin
-
-router = DefaultRouter()
-router.register(r'events', EventViewSet)
-router.register(r'uploads', ArtUploadViewSet)
-router.register(r'artists', ArtistViewSet)
-router.register(r'community-posts', CommunityPostViewSet)
-router.register(r'ratings', RatingViewSet)
+from django.urls import path
+from accounts.views import CustomRegisterView, CustomLoginView, LogoutView, ProfileView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/accounts/', include('accounts.urls')),
-    path('api/', include(router.urls)),
-    path('api/register/', RegisterView.as_view(), name='register'),
-    path('api/login/', LoginView.as_view(), name='login'),
-    path('api/logout/', LogoutView.as_view(), name='logout'),
-    path('api/profile/', ProfileView.as_view(), name='profile'),
+    path('auth/register/', CustomRegisterView.as_view(), name='custom-register'),
+    path('auth/login/', CustomLoginView.as_view(), name='custom-login'),
+    path('auth/logout/', LogoutView.as_view(), name='logout'),
+    path('auth/profile/', ProfileView.as_view(), name='profile'),
+    # Remove or comment out dj_rest_auth.urls and allauth.socialaccount.urls for now
+    # path('auth/', include('dj_rest_auth.urls')),
+    # path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    # path('auth/', include('allauth.socialaccount.urls')),
 ]

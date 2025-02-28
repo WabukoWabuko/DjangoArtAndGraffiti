@@ -1,13 +1,12 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/authContext';
-import './Auth.css'; // Shared CSS for auth components
+import './Auth.css';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const { login } = useContext(AuthContext);
+    const { login, error, user } = useContext(AuthContext);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,12 +15,15 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError(null);
-
         try {
+            console.log('Submitting login with:', form);
             await login(form.email, form.password);
+            if (user) {
+                console.log('Logged in as:', user);
+                window.location.href = '/dashboard';  // Redirect to dashboard
+            }
         } catch (err) {
-            setError(err.message || 'Login failed. Please check your credentials and try again.');
+            console.error('Login error:', err);
         } finally {
             setLoading(false);
         }
@@ -30,12 +32,11 @@ const Login = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-            <form onSubmit={handleSubmit}>
-                <h2>Login</h2>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                
-                <div className="form-group">
-                        <label htmlFor="full_name">Email</label>
+                <form onSubmit={handleSubmit}>
+                    <h2>Login</h2>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
                         <input
                             type="email"
                             id="email"
@@ -58,14 +59,14 @@ const Login = () => {
                             required
                         />
                     </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Logging in...' : 'Login'}
-                </button>
-            </form>
-            <p className="auth-link">
-                    Already have an account? <Link to="/register">Register here</Link>
+                    <button type="submit" disabled={loading}>
+                        {loading ? 'Logging in...' : 'Login'}
+                    </button>
+                </form>
+                <p className="auth-link">
+                    Don't have an account? <Link to="/register">Register here</Link>
                 </p>
-        </div>
+            </div>
         </div>
     );
 };
