@@ -14,4 +14,4 @@ django-redis
 django-allauth
 dj-rest-auth
 channels
-corsheaders
+django-cors-headers

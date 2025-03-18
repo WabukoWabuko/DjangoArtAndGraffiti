@@ -200,9 +200,11 @@ CORS_ALLOWED_ORIGINS = ['http://localhost:3000'] # React frontend url
 
 #  allauth settings
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # No username field
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_LOGIN_METHODS = {'email'}
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 
 CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF cookie if needed
 CORS_ALLOW_CREDENTIALS = False  # Allow cookies/credentials for CSRF
