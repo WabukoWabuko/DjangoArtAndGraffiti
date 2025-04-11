@@ -9,7 +9,7 @@ import LandingPage from './components/LandingPage';
 
 const App = () => (
     <AuthProvider>
-        <Router>
+        <Router basename="/DjangoArtAndGraffiti">
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
