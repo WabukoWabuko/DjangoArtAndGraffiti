@@ -1,21 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap';
-import { getUser, updateUser } from '../services/api';
+import { AuthContext } from '../context/AuthContext';
+import { getUser, updateUser, getAnalytics } from '../services/api';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 function UserProfilePage() {
-  const [user, setUser] = useState(null);
+  const { user } = useContext(AuthContext);
+  const [profile, setProfile] = useState(null);
   const [bio, setBio] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
+  const [analytics, setAnalytics] = useState([]);
 
-  // Fetch the current user (placeholder until we implement proper auth)
+  // Fetch the current user and their analytics
   useEffect(() => {
-    getUser(1)
-      .then(response => {
-        setUser(response.data);
-        setBio(response.data.bio);
-      })
-      .catch(error => console.error('Error fetching user:', error));
-  }, []);
+    if (user) {
+      setProfile(user);
+      setBio(user.bio || '');
+      getAnalytics()
+        .then(response => {
+          const userAnalytics = response.data.filter(item => item.user === user.id);
+          setAnalytics(userAnalytics);
+        })
+        .catch(error => console.error('Error fetching analytics:', error));
+    }
+  }, [user]);
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -23,28 +31,34 @@ function UserProfilePage() {
     formData.append('bio', bio);
     if (profilePicture) formData.append('profile_picture', profilePicture);
 
-    updateUser(user.id, formData)
+    updateUser(profile.id, formData)
       .then(response => {
-        setUser(response.data);
+        setProfile(response.data);
         alert('Profile updated successfully!');
-      })
-      .catch(error => console.error('Error updating profile:', error));
+      });
   };
 
-  if (!user) return <Container className="my-5"><p>Loading...</p></Container>;
+  // Prepare data for bar chart
+  const analyticsData = analytics.map(item => ({
+    date: new Date(item.timestamp).toLocaleDateString(),
+    views: item.views,
+    uploads: item.uploads,
+  }));
+
+  if (!profile) return <Container className="my-5"><p>Loading...</p></Container>;
 
   return (
     <Container className="my-5">
       <h2 className="mb-4">User Profile</h2>
       <Card className="mb-4">
         <Card.Body>
-          <Card.Title>{user.username}</Card.Title>
+          <Card.Title>{profile.username}</Card.Title>
           <Card.Text>
-            <strong>Email:</strong> {user.email}<br />
-            <strong>Bio:</strong> {user.bio || 'No bio yet.'}<br />
-            {user.profile_picture && (
+            <strong>Email:</strong> {profile.email}<br />
+            <strong>Bio:</strong> {profile.bio || 'No bio yet.'}<br />
+            {profile.profile_picture && (
               <img
-                src={`http://localhost:8000${user.profile_picture}`}
+                src={`http://localhost:8000${profile.profile_picture}`}
                 alt="Profile"
                 style={{ width: '100px', borderRadius: '50%' }}
               />
@@ -52,7 +66,24 @@ function UserProfilePage() {
           </Card.Text>
         </Card.Body>
       </Card>
-      <h4>Update Profile</h4>
+
+      {/* Analytics Visualization */}
+      {analytics.length > 0 && (
+        <>
+          <h4 className="mb-3">Your Activity</h4>
+          <BarChart width={600} height={300} data={analyticsData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="views" fill="#ff4b2b" />
+            <Bar dataKey="uploads" fill="#ff416c" />
+          </BarChart>
+        </>
+      )}
+
+      <h4 className="mt-5">Update Profile</h4>
       <Form onSubmit={handleUpdate}>
         <Form.Group className="mb-3" controlId="bio">
           <Form.Label>Bio</Form.Label>

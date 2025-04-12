@@ -2,7 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Form, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { getEvents, createEvent, updateEvent, deleteEvent, getArtworks, createArtwork, updateArtwork, deleteArtwork, getArtists, createArtist, updateArtist, deleteArtist } from '../services/api';
+import { getEvents, createEvent, updateEvent, deleteEvent, getArtworks, createArtwork, updateArtwork, deleteArtwork, getArtists, createArtist, updateArtist, deleteArtist, getAnalytics } from '../services/api';
+import { PieChart, Pie, Cell, Tooltip, Legend, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 function AdminDashboardPage() {
   const { user } = useContext(AuthContext);
@@ -10,23 +11,21 @@ function AdminDashboardPage() {
   const [events, setEvents] = useState([]);
   const [artworks, setArtworks] = useState([]);
   const [artists, setArtists] = useState([]);
+  const [analytics, setAnalytics] = useState([]);
   const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', location: '', time: '' });
   const [newArtwork, setNewArtwork] = useState({ title: '', artist: '', description: '', price: '', category: '', image: null });
   const [newArtist, setNewArtist] = useState({ user: '', portfolio: '', specialty: '', social_links: '' });
 
-  // Redirect if not an admin
+  // Fetch data
   useEffect(() => {
     if (!user || !user.is_staff) {
       navigate('/admin-login');
     }
-  }, [user, navigate]);
-
-  // Fetch data
-  useEffect(() => {
     getEvents().then(response => setEvents(response.data));
     getArtworks().then(response => setArtworks(response.data));
     getArtists().then(response => setArtists(response.data));
-  }, []);
+    getAnalytics().then(response => setAnalytics(response.data));
+  }, [user, navigate]);
 
   // Handle event CRUD
   const handleCreateEvent = (e) => {
@@ -108,6 +107,24 @@ function AdminDashboardPage() {
       });
   };
 
+  // Prepare data for charts
+  const artworkCategories = artworks.reduce((acc, artwork) => {
+    acc[artwork.category] = (acc[artwork.category] || 0) + 1;
+    return acc;
+  }, {});
+  const pieData = Object.keys(artworkCategories).map(key => ({
+    name: key,
+    value: artworkCategories[key],
+  }));
+
+  const analyticsOverTime = analytics.map(item => ({
+    timestamp: new Date(item.timestamp).toLocaleDateString(),
+    views: item.views,
+    sales: item.sales,
+  }));
+
+  const COLORS = ['#ff4b2b', '#ff416c', '#ffc107', '#28a745'];
+
   return (
     <Container className="my-5">
       <h2 className="mb-4">Admin Dashboard</h2>
@@ -137,6 +154,43 @@ function AdminDashboardPage() {
               <Card.Text>{events.length}</Card.Text>
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+
+      {/* Analytics Visualizations */}
+      <h3 className="mb-3">Platform Analytics</h3>
+      <Row className="mb-5">
+        <Col md={6}>
+          <h4>Artwork Categories (Pie Chart)</h4>
+          <PieChart width={400} height={300}>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="value"
+              label
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </Col>
+        <Col md={6}>
+          <h4>Views and Sales Over Time (Line Chart)</h4>
+          <LineChart width={400} height={300} data={analyticsOverTime}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="timestamp" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="views" stroke="#ff4b2b" />
+            <Line type="monotone" dataKey="sales" stroke="#ff416c" />
+          </LineChart>
         </Col>
       </Row>
 
