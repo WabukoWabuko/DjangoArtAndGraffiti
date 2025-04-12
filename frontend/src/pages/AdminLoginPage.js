@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import { loginAdmin } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { loginAdmin } from '../services/api';
 
 function AdminLoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext); // To update user state
 
   const handleLogin = (e) => {
     e.preventDefault();
     loginAdmin(username, password)
       .then(response => {
+        setUser(response.data.user); // Update user in context
         navigate('/admin-dashboard');
       })
       .catch(error => {
