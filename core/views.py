@@ -84,7 +84,7 @@ def register_user(request):
 
     if is_artist:
         Artist.objects.create(
-            user=user.id,
+            user=user,  # Pass the user object, not user.id
             portfolio='',
             specialty='',
             social_links={}
