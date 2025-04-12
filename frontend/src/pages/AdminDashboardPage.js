@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getEvents, createEvent, updateEvent, deleteEvent, getArtworks, createArtwork, updateArtwork, deleteArtwork, getArtists, createArtist, updateArtist, deleteArtist, getAnalytics } from '../services/api';
 import { PieChart, Pie, Cell, Tooltip, Legend, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import jsPDF from 'jspdf';  // Only import jsPDF
 
 function AdminDashboardPage() {
   const { user } = useContext(AuthContext);
@@ -105,7 +104,6 @@ function AdminDashboardPage() {
       });
   };
 
-  // Generate PDF report
   const generatePDF = () => {
     const doc = new jsPDF();
     doc.text('Graffiti Hub Admin Report', 20, 20);
