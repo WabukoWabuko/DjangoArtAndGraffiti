@@ -10,10 +10,11 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     getCurrentUser()
       .then(response => {
-        setUser(response.data);
+        setUser(response.data.user);  // Updated to handle { user: null }
         setLoading(false);
       })
-      .catch(() => {
+      .catch(error => {
+        console.error('Error fetching current user:', error);
         setUser(null);
         setLoading(false);
       });
