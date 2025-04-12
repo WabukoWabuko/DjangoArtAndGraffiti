@@ -1,6 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import GalleryPage from './pages/GalleryPage';
@@ -10,24 +11,28 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import UserProfilePage from './pages/UserProfilePage';
+import AdminDashboardPage from './pages/AdminDashboardPage'; // We'll create this
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/artists" element={<ArtistsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/admin-login" element={<AdminLoginPage />} />
-          <Route path="/profile" element={<UserProfilePage />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/artists" element={<ArtistsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/admin-login" element={<AdminLoginPage />} />
+            <Route path="/profile" element={<UserProfilePage />} />
+            <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navbar as BootstrapNavbar, Nav, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function Navbar() {
+  const { user, logout } = useContext(AuthContext);
+
   return (
     <BootstrapNavbar bg="dark" variant="dark" expand="lg" sticky="top">
       <Container>
@@ -18,8 +21,17 @@ function Navbar() {
             <Nav.Link as={Link} to="/artists">Artists</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
             <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
-            <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
-            <Nav.Link as={Link} to="/admin-login">Admin Login</Nav.Link>
+            {user ? (
+              <>
+                <Nav.Link as={Link} to="/profile">{user.username}</Nav.Link>
+                {user.is_staff && <Nav.Link as={Link} to="/admin-dashboard">Admin Dashboard</Nav.Link>}
+                <Nav.Link onClick={logout}>Logout</Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/admin-login">Admin Login</Nav.Link>
+              </>
+            )}
           </Nav>
         </BootstrapNavbar.Collapse>
       </Container>
