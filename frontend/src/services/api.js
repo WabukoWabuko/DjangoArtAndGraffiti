@@ -5,12 +5,15 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const loginAdmin = (username, password) =>
-  api.post('admin-login/', { username, password });
+export const login = (username, password, role) =>
+  api.post('login/', { username, password, role });
 
 export const getCurrentUser = () => api.get('current-user/');
 
 export const logoutUser = () => api.post('logout/');
+
+export const registerUser = (username, email, password, is_artist) =>
+  api.post('register/', { username, email, password, is_artist });
 
 export const getUser = (id) => api.get(`users/${id}/`);
 export const updateUser = (id, data) => api.patch(`users/${id}/`, data);

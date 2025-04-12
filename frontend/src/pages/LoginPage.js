@@ -1,19 +1,20 @@
 import React, { useState, useContext } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { loginUser } from '../services/api';
+import { login } from '../services/api';
 
 function LoginPage() {
   const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('user'); // Default role
   const [error, setError] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
-    loginUser(username, password)
+    login(username, password, role)
       .then(response => {
         setUser(response.data.user);
         navigate('/');
@@ -45,6 +46,19 @@ function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="role">
+          <Form.Label>Login as</Form.Label>
+          <Dropdown onSelect={(selectedRole) => setRole(selectedRole)}>
+            <Dropdown.Toggle variant="secondary" id="dropdown-role">
+              {role.charAt(0).toUpperCase() + role.slice(1)}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="user">User</Dropdown.Item>
+              <Dropdown.Item eventKey="artist">Artist</Dropdown.Item>
+              <Dropdown.Item eventKey="admin">Admin</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Form.Group>
         <Button variant="primary" type="submit">Login</Button>
       </Form>

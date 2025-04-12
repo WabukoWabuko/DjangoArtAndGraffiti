@@ -5,7 +5,6 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import MainPage from './pages/MainPage';
-import AdminLoginPage from './pages/AdminLoginPage';
 import UserProfilePage from './pages/UserProfilePage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import LoginPage from './pages/LoginPage';
@@ -19,7 +18,6 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route path="/admin-login" element={<AdminLoginPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/profile" element={<UserProfilePage />} />
