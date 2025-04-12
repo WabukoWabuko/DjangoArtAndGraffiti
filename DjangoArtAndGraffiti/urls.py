@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from core.views import admin_login, current_user, logout_user  # Added logout_user
+from core.views import admin_login, current_user, logout_user, register_user, user_login
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -28,7 +28,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/admin-login/', admin_login, name='admin_login'),
     path('api/current-user/', current_user, name='current_user'),
-    path('api/logout/', logout_user, name='logout_user'),  # New endpoint
+    path('api/logout/', logout_user, name='logout_user'),
+    path('api/register/', register_user, name='register_user'),
+    path('api/user-login/', user_login, name='user_login'),
     path('api/', include('core.urls')),
     path('api/', include('artworks.urls')),
     path('api/', include('events.urls')),
