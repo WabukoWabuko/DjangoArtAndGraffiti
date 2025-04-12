@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/DjangoArtAndGraffiti/static/css/main.65a1cea2.css",
+    "main.js": "/DjangoArtAndGraffiti/static/js/main.435062fc.js",
+    "index.html": "/DjangoArtAndGraffiti/index.html",
+    "main.65a1cea2.css.map": "/DjangoArtAndGraffiti/static/css/main.65a1cea2.css.map",
+    "main.435062fc.js.map": "/DjangoArtAndGraffiti/static/js/main.435062fc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.65a1cea2.css",
+    "static/js/main.435062fc.js"
+  ]
+}
