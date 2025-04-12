@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getEvents, createEvent, updateEvent, deleteEvent, getArtworks, createArtwork, updateArtwork, deleteArtwork, getArtists, createArtist, updateArtist, deleteArtist, getAnalytics } from '../services/api';
 import { PieChart, Pie, Cell, Tooltip, Legend, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function AdminDashboardPage() {
   const { user } = useContext(AuthContext);
@@ -16,7 +18,6 @@ function AdminDashboardPage() {
   const [newArtwork, setNewArtwork] = useState({ title: '', artist: '', description: '', price: '', category: '', image: null });
   const [newArtist, setNewArtist] = useState({ user: '', portfolio: '', specialty: '', social_links: '' });
 
-  // Fetch data
   useEffect(() => {
     if (!user || !user.is_staff) {
       navigate('/admin-login');
@@ -27,7 +28,6 @@ function AdminDashboardPage() {
     getAnalytics().then(response => setAnalytics(response.data));
   }, [user, navigate]);
 
-  // Handle event CRUD
   const handleCreateEvent = (e) => {
     e.preventDefault();
     createEvent(newEvent)
@@ -51,7 +51,6 @@ function AdminDashboardPage() {
       });
   };
 
-  // Handle artwork CRUD
   const handleCreateArtwork = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -83,7 +82,6 @@ function AdminDashboardPage() {
       });
   };
 
-  // Handle artist CRUD
   const handleCreateArtist = (e) => {
     e.preventDefault();
     createArtist(newArtist)
@@ -107,7 +105,41 @@ function AdminDashboardPage() {
       });
   };
 
-  // Prepare data for charts
+  // Generate PDF report
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.text('Graffiti Hub Admin Report', 20, 20);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 30);
+
+    doc.text('Platform Stats', 20, 50);
+    doc.text(`Total Artworks: ${artworks.length}`, 20, 60);
+    doc.text(`Total Events: ${events.length}`, 20, 70);
+    doc.text(`Total Artists: ${artists.length}`, 20, 80);
+
+    doc.text('Events', 20, 100);
+    doc.autoTable({
+      startY: 110,
+      head: [['Title', 'Description', 'Date', 'Location', 'Time']],
+      body: events.map(event => [event.title, event.description, event.date, event.location, event.time]),
+    });
+
+    doc.text('Artworks', 20, doc.lastAutoTable.finalY + 20);
+    doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 30,
+      head: [['Title', 'Artist ID', 'Description', 'Price', 'Category']],
+      body: artworks.map(artwork => [artwork.title, artwork.artist, artwork.description, `$${artwork.price}`, artwork.category]),
+    });
+
+    doc.text('Artists', 20, doc.lastAutoTable.finalY + 20);
+    doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 30,
+      head: [['User ID', 'Portfolio', 'Specialty']],
+      body: artists.map(artist => [artist.user, artist.portfolio, artist.specialty]),
+    });
+
+    doc.save('admin-report.pdf');
+  };
+
   const artworkCategories = artworks.reduce((acc, artwork) => {
     acc[artwork.category] = (acc[artwork.category] || 0) + 1;
     return acc;
@@ -128,14 +160,14 @@ function AdminDashboardPage() {
   return (
     <Container className="my-5">
       <h2 className="mb-4">Admin Dashboard</h2>
+      <Button variant="success" onClick={generatePDF} className="mb-4">Generate PDF Report</Button>
 
-      {/* Stats Overview */}
       <Row className="mb-4">
         <Col md={4}>
           <Card>
             <Card.Body>
               <Card.Title>Total Users</Card.Title>
-              <Card.Text>{/* Placeholder until we fetch users */}50</Card.Text>
+              <Card.Text>{/* Placeholder */}50</Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -157,7 +189,6 @@ function AdminDashboardPage() {
         </Col>
       </Row>
 
-      {/* Analytics Visualizations */}
       <h3 className="mb-3">Platform Analytics</h3>
       <Row className="mb-5">
         <Col md={6}>
@@ -194,7 +225,6 @@ function AdminDashboardPage() {
         </Col>
       </Row>
 
-      {/* Manage Events */}
       <h3 className="mb-3">Manage Events</h3>
       <Form onSubmit={handleCreateEvent} className="mb-4">
         <Row>
@@ -277,7 +307,6 @@ function AdminDashboardPage() {
         </tbody>
       </Table>
 
-      {/* Manage Artworks */}
       <h3 className="mb-3 mt-5">Manage Artworks</h3>
       <Form onSubmit={handleCreateArtwork} className="mb-4">
         <Row>
@@ -367,7 +396,6 @@ function AdminDashboardPage() {
         </tbody>
       </Table>
 
-      {/* Manage Artists */}
       <h3 className="mb-3 mt-5">Manage Artists</h3>
       <Form onSubmit={handleCreateArtist} className="mb-4">
         <Row>

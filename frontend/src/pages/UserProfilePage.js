@@ -3,6 +3,8 @@ import { Container, Form, Button, Card } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthContext';
 import { getUser, updateUser, getAnalytics } from '../services/api';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function UserProfilePage() {
   const { user } = useContext(AuthContext);
@@ -11,7 +13,6 @@ function UserProfilePage() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [analytics, setAnalytics] = useState([]);
 
-  // Fetch the current user and their analytics
   useEffect(() => {
     if (user) {
       setProfile(user);
@@ -38,7 +39,26 @@ function UserProfilePage() {
       });
   };
 
-  // Prepare data for bar chart
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.text('User Activity Report', 20, 20);
+    doc.text(`User: ${profile.username}`, 20, 30);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 40);
+
+    doc.text('Activity Summary', 20, 60);
+    doc.autoTable({
+      startY: 70,
+      head: [['Date', 'Views', 'Uploads']],
+      body: analytics.map(item => [
+        new Date(item.timestamp).toLocaleDateString(),
+        item.views,
+        item.uploads,
+      ]),
+    });
+
+    doc.save('user-report.pdf');
+  };
+
   const analyticsData = analytics.map(item => ({
     date: new Date(item.timestamp).toLocaleDateString(),
     views: item.views,
@@ -67,7 +87,6 @@ function UserProfilePage() {
         </Card.Body>
       </Card>
 
-      {/* Analytics Visualization */}
       {analytics.length > 0 && (
         <>
           <h4 className="mb-3">Your Activity</h4>
@@ -80,6 +99,7 @@ function UserProfilePage() {
             <Bar dataKey="views" fill="#ff4b2b" />
             <Bar dataKey="uploads" fill="#ff416c" />
           </BarChart>
+          <Button variant="success" onClick={generatePDF} className="mt-3">Generate PDF Report</Button>
         </>
       )}
 
