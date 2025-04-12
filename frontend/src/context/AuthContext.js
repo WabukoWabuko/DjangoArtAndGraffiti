@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { getCurrentUser } from '../services/api';
+import { getCurrentUser, logoutUser } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -7,7 +7,6 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch the current user on app load
   useEffect(() => {
     getCurrentUser()
       .then(response => {
@@ -21,8 +20,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = () => {
-    setUser(null);
-    // In a real app, you'd also call a logout API endpoint
+    logoutUser()
+      .then(() => {
+        setUser(null);
+        window.location.href = '/'; // Redirect to home
+      })
+      .catch(error => console.error('Logout failed:', error));
   };
 
   return (

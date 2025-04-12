@@ -2,13 +2,15 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:8000/api/',
-  withCredentials: true, // Include cookies for Django session auth
+  withCredentials: true,
 });
 
 export const loginAdmin = (username, password) =>
   api.post('admin-login/', { username, password });
 
 export const getCurrentUser = () => api.get('current-user/');
+
+export const logoutUser = () => api.post('logout/');
 
 export const getUser = (id) => api.get(`users/${id}/`);
 export const updateUser = (id, data) => api.patch(`users/${id}/`, data);
