@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import User, Artist
+from .models import User
+from artists.models import Artist  # Import Artist from artists.models
 from .serializers import UserSerializer
 from .permissions import IsAdminOrReadOnly
 
