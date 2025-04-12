@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from core.views import admin_login
+from core.views import admin_login  # Import the updated view
 
 # Set up Swagger schema view
 schema_view = get_schema_view(
@@ -27,7 +27,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('admin-login/', admin_login, name='admin_login'),
+    path('api/admin-login/', admin_login, name='admin_login'),  # Changed to API endpoint
     path('api/', include('core.urls')),
     path('api/', include('artworks.urls')),
     path('api/', include('events.urls')),

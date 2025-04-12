@@ -9,13 +9,14 @@ A platform for showcasing graffiti and street art, built with Django, ReactJS, a
 
 ## Authentication Workflow
 
-The following flowchart illustrates the admin login process:
+The following flowchart illustrates the admin login process via API:
 
 ```mermaid
 flowchart TD
-    A[User Visits /admin-login/] --> B[Enters Username & Password]
-    B --> C{Is User Staff?}
-    C -- Yes --> D[Login Successful]
-    D --> E[Redirect to Admin Dashboard]
-    C -- No --> F[Show Error: Invalid Credentials]
-    F --> A
+    A[React Frontend: Admin Visits /admin-login] --> B[User Enters Username & Password]
+    B --> C[POST Request to /api/admin-login/]
+    C --> D{Is User Staff?}
+    D -- Yes --> E[Login Successful: Returns User Data]
+    E --> F[React Redirects to Admin Dashboard]
+    D -- No --> G[Returns Error: Invalid Credentials]
+    G --> B
