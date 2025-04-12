@@ -5,9 +5,9 @@ import { AuthContext } from '../context/AuthContext';
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
-  const [expanded, setExpanded] = useState(false); // State to control navbar collapse
+  const [expanded, setExpanded] = useState(false);
 
-  const handleNavClick = () => setExpanded(false); // Close navbar on click
+  const handleNavClick = () => setExpanded(false);
 
   return (
     <BootstrapNavbar
@@ -39,7 +39,12 @@ function Navbar() {
                 <Nav.Link onClick={() => { logout(); handleNavClick(); }}>Logout</Nav.Link>
               </>
             ) : (
-              <Nav.Link as={Link} to="/admin-login" onClick={handleNavClick}>Admin Login</Nav.Link>
+              <>
+                <Nav.Link as={Link} to="/login" onClick={handleNavClick}>Login</Nav.Link>
+                {user?.is_staff ? null : (
+                  <Nav.Link as={Link} to="/admin-login" onClick={handleNavClick}>Admin Login</Nav.Link>
+                )}
+              </>
             )}
           </Nav>
         </BootstrapNavbar.Collapse>

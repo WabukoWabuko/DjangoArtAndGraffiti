@@ -6,11 +6,14 @@ function MainPage() {
   const [artworks, setArtworks] = useState([]);
   const [events, setEvents] = useState([]);
   const [artists, setArtists] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    getArtworks().then(response => setArtworks(response.data));
-    getEvents().then(response => setEvents(response.data));
-    getArtists().then(response => setArtists(response.data));
+    Promise.all([
+      getArtworks().then(response => setArtworks(response.data)).catch(err => setError('Failed to load artworks')),
+      getEvents().then(response => setEvents(response.data)).catch(err => setError('Failed to load events')),
+      getArtists().then(response => setArtists(response.data)).catch(err => setError('Failed to load artists')),
+    ]);
   }, []);
 
   return (
@@ -20,7 +23,7 @@ function MainPage() {
         <Container>
           <h1>Welcome to Graffiti Hub</h1>
           <p>Discover the best street art and graffiti events in your area.</p>
-          <Button variant="primary" href="#gallery">Explore Gallery</Button>
+          <Button variant="primary"In href="#gallery">Explore Gallery</Button>
         </Container>
       </section>
 
@@ -28,6 +31,8 @@ function MainPage() {
       <section id="gallery" className="py-5">
         <Container>
           <h2 className="mb-4 text-center">Gallery</h2>
+          {error && <p className="text-danger text-center">{error}</p>}
+          {artworks.length === 0 && !error && <p className="text-center">No artworks available.</p>}
           <Row>
             {artworks.map(artwork => (
               <Col md={4} key={artwork.id} className="mb-4">
@@ -57,6 +62,8 @@ function MainPage() {
       <section id="events" className="py-5 bg-light">
         <Container>
           <h2 className="mb-4 text-center">Upcoming Events</h2>
+          {error && <p className="text-danger text-center">{error}</p>}
+          {events.length === 0 && !error && <p className="text-center">No events available.</p>}
           <Row>
             {events.map(event => (
               <Col md={4} key={event.id} className="mb-4">
@@ -79,6 +86,8 @@ function MainPage() {
       <section id="artists" className="py-5">
         <Container>
           <h2 className="mb-4 text-center">Featured Artists</h2>
+          {error && <p className="text-danger text-center">{error}</p>}
+          {artists.length === 0 && !error && <p className="text-center">No artists available.</p>}
           <Row>
             {artists.map(artist => (
               <Col md={4} key={artist.id} className="mb-4">

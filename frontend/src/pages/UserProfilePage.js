@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthContext';
-import { getUser, updateUser, getAnalytics } from '../services/api';
+import { updateUser, getAnalytics } from '../services/api'; // Removed getUser
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import jsPDF from 'jspdf';  // Only import jsPDF
+import jsPDF from 'jspdf';
 
 function UserProfilePage() {
   const { user } = useContext(AuthContext);
