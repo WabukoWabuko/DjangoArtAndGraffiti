@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Card, Row, Col } from 'react-bootstrap';
-import axios from 'axios';
+import { getEvents, getArtworks, getArtists } from '../services/api';
 
 function HomePage() {
   const [events, setEvents] = useState([]);
   const [artworks, setArtworks] = useState([]);
   const [artists, setArtists] = useState([]);
 
-  // Fetch data from Django API on component mount
+  // Fetch data using the API service
   useEffect(() => {
-    // Fetch upcoming events
-    axios.get('http://localhost:8000/api/events/')
-      .then(response => setEvents(response.data.slice(0, 2))) // Show only 2 events
+    getEvents()
+      .then(response => setEvents(response.data.slice(0, 2)))
       .catch(error => console.error('Error fetching events:', error));
 
-    // Fetch recent artworks
-    axios.get('http://localhost:8000/api/artworks/')
-      .then(response => setArtworks(response.data.slice(0, 3))) // Show only 3 artworks
+    getArtworks()
+      .then(response => setArtworks(response.data.slice(0, 3)))
       .catch(error => console.error('Error fetching artworks:', error));
 
-    // Fetch featured artists
-    axios.get('http://localhost:8000/api/artists/')
-      .then(response => setArtists(response.data.slice(0, 3))) // Show only 3 artists
+    getArtists()
+      .then(response => setArtists(response.data.slice(0, 3)))
       .catch(error => console.error('Error fetching artists:', error));
   }, []);
 

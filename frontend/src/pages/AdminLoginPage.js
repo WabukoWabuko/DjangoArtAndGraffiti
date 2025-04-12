@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import { loginAdmin } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 function AdminLoginPage() {
@@ -11,10 +11,9 @@ function AdminLoginPage() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8000/api/admin-login/', { username, password }, { withCredentials: true })
+    loginAdmin(username, password)
       .then(response => {
-        // On successful login, redirect to a placeholder admin dashboard
-        navigate('/admin-dashboard'); // We’ll create this later
+        navigate('/admin-dashboard');
       })
       .catch(error => {
         setError(error.response?.data?.error || 'An error occurred');

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap';
-import axios from 'axios';
+import { getUser, updateUser } from '../services/api';
 
 function UserProfilePage() {
   const [user, setUser] = useState(null);
@@ -9,8 +9,7 @@ function UserProfilePage() {
 
   // Fetch the current user (placeholder until we implement proper auth)
   useEffect(() => {
-    // For now, fetch a user as an example; we'll replace this with proper auth later
-    axios.get('http://localhost:8000/api/users/1/', { withCredentials: true })
+    getUser(1)
       .then(response => {
         setUser(response.data);
         setBio(response.data.bio);
@@ -24,10 +23,7 @@ function UserProfilePage() {
     formData.append('bio', bio);
     if (profilePicture) formData.append('profile_picture', profilePicture);
 
-    axios.patch(`http://localhost:8000/api/users/${user.id}/`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      withCredentials: true
-    })
+    updateUser(user.id, formData)
       .then(response => {
         setUser(response.data);
         alert('Profile updated successfully!');

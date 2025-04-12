@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import axios from 'axios';
+import { getEvents } from '../services/api';
 
 function EventsPage() {
   const [events, setEvents] = useState([]);
 
-  // Fetch events from Django API
+  // Fetch events using the API service
   useEffect(() => {
-    axios.get('http://localhost:8000/api/events/')
+    getEvents()
       .then(response => setEvents(response.data))
       .catch(error => console.error('Error fetching events:', error));
   }, []);

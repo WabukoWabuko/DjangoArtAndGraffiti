@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import axios from 'axios';
+import { getArtists } from '../services/api';
 
 function ArtistsPage() {
   const [artists, setArtists] = useState([]);
 
-  // Fetch artists from Django API
+  // Fetch artists using the API service
   useEffect(() => {
-    axios.get('http://localhost:8000/api/artists/')
+    getArtists()
       .then(response => setArtists(response.data))
       .catch(error => console.error('Error fetching artists:', error));
   }, []);

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Modal, Button } from 'react-bootstrap';
-import axios from 'axios';
+import { getArtworks } from '../services/api';
 
 function GalleryPage() {
   const [artworks, setArtworks] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedArtwork, setSelectedArtwork] = useState(null);
 
-  // Fetch artworks from Django API
+  // Fetch artworks using the API service
   useEffect(() => {
-    axios.get('http://localhost:8000/api/artworks/')
+    getArtworks()
       .then(response => setArtworks(response.data))
       .catch(error => console.error('Error fetching artworks:', error));
   }, []);
