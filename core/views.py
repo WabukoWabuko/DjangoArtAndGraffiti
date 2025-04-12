@@ -7,26 +7,33 @@ from .serializers import UserSerializer
 from .permissions import IsAdminOrReadOnly
 
 @api_view(['POST'])
-def admin_login(request):
+def login(request):
     """
-    API endpoint for admin login.
-    Authenticates staff users and logs them in, returning user data.
+    API endpoint for user login.
+    Authenticates users based on role (user, artist, admin).
     """
     username = request.data.get('username')
     password = request.data.get('password')
+    role = request.data.get('role')  # 'user', 'artist', or 'admin'
+
     user = authenticate(request, username=username, password=password)
-    
-    if user is not None and user.is_staff:
-        login(request, user)
-        serializer = UserSerializer(user)
-        return Response({
-            'message': 'Admin login successful',
-            'user': serializer.data
-        }, status=status.HTTP_200_OK)
-    else:
-        return Response({
-            'error': 'Invalid credentials or not an admin'
-        }, status=status.HTTP_401_UNAUTHORIZED)
+
+    if user is None:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    # Check role-specific conditions
+    if role == 'admin' and not user.is_staff:
+        return Response({'error': 'User is not an admin'}, status=status.HTTP_403_FORBIDDEN)
+    elif role == 'artist':
+        if not Artist.objects.filter(user=user.id).exists():
+            return Response({'error': 'User is not an artist'}, status=status.HTTP_403_FORBIDDEN)
+
+    login(request, user)
+    serializer = UserSerializer(user)
+    return Response({
+        'message': 'Login successful',
+        'user': serializer.data
+    }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def current_user(request):
@@ -88,28 +95,6 @@ def register_user(request):
         'message': 'Registration successful',
         'user': serializer.data
     }, status=status.HTTP_201_CREATED)
-
-@api_view(['POST'])
-def user_login(request):
-    """
-    API endpoint for user login.
-    Authenticates users and logs them in, returning user data.
-    """
-    username = request.data.get('username')
-    password = request.data.get('password')
-    user = authenticate(request, username=username, password=password)
-    
-    if user is not None:
-        login(request, user)
-        serializer = UserSerializer(user)
-        return Response({
-            'message': 'Login successful',
-            'user': serializer.data
-        }, status=status.HTTP_200_OK)
-    else:
-        return Response({
-            'error': 'Invalid credentials'
-        }, status=status.HTTP_401_UNAUTHORIZED)
 
 class UserViewSet(viewsets.ModelViewSet):
     """
