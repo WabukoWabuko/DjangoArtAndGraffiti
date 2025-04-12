@@ -34,7 +34,7 @@ function Navbar() {
                 <Nav.Link onClick={() => { logout(); handleNavClick(); }}>Logout</Nav.Link>
               </>
             ) : (
-              <Nav.Link as={Link} to="/login" onClick={handleNavClick}>Login</Nav.Link>
+              <Nav.Link as={Link} to="/auth" onClick={handleNavClick}>Login / Register</Nav.Link>
             )}
           </Nav>
         </BootstrapNavbar.Collapse>
