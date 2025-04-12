@@ -7,6 +7,16 @@ Landing page with ReactJS and Django
 
 A platform for showcasing graffiti and street art, built with Django, ReactJS, and SQLite3.
 
+## Features
+
+- **Frontend**: ReactJS with Bootstrap for a responsive, modern UI.
+- **Backend**: Django REST Framework for API endpoints.
+- **Authentication**: Admin login/logout with session-based authentication.
+- **Admin Dashboard**: Manage events, artworks, and artists with CRUD operations.
+- **Data Visualization**: Charts for platform analytics (Recharts).
+- **Reporting**: Generate PDF reports for admin and user activity (jsPDF).
+- **Deployment**: Hosted on GitHub Pages at [https://WabukoWabuko.github.io/DjangoArtAndGraffiti](https://WabukoWabuko.github.io/DjangoArtAndGraffiti).
+
 ## Authentication Workflow
 
 The following flowchart illustrates the admin login process via API:
