@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-8n()m8o=p==@(#wrtgf(u8#p%s-!lf3a@ddmfjeoy9mrko5nru
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -49,9 +49,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -133,6 +133,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Additionals
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # For development; should be restricted in production
+CORS_ALLOW_ALL_ORIGINS = False  # For development; should be restricted in production
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React frontend
+]
+CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be sent with requests
 
 AUTH_USER_MODEL = 'core.User' # Used because of collision with the inbuild user model
+
+# Session settings
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'  # Allows cookies to be sent in cross-site requests

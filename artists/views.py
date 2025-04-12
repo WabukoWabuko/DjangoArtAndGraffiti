@@ -1,12 +1,13 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import Artist
 from .serializers import ArtistSerializer
+from core.permissions import IsAdminOrReadOnly
 
 class ArtistViewSet(viewsets.ModelViewSet):
     """
     API endpoint for managing artists.
-    Allows CRUD operations on Artist objects (admin only).
+    Allows read-only access for all, write operations for admins.
     """
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]

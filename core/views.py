@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import User
 from .serializers import UserSerializer
+from .permissions import IsAdminOrReadOnly
 
 @api_view(['POST'])
 def admin_login(request):
@@ -31,12 +32,12 @@ def admin_login(request):
 def current_user(request):
     """
     API endpoint to fetch the current logged-in user.
-    Returns user data if authenticated, else returns an error.
+    Returns user data if authenticated, else returns null.
     """
     if request.user.is_authenticated:
         serializer = UserSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response({'error': 'Not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+    return Response({'user': None}, status=status.HTTP_200_OK)  # Return null instead of error
 
 @api_view(['POST'])
 def logout_user(request):
