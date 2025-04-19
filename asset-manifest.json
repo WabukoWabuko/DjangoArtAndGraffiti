@@ -1,13 +1,19 @@
 {
   "files": {
-    "main.css": "/DjangoArtAndGraffiti/static/css/main.65a1cea2.css",
-    "main.js": "/DjangoArtAndGraffiti/static/js/main.435062fc.js",
+    "main.css": "/DjangoArtAndGraffiti/static/css/main.2e170d71.css",
+    "main.js": "/DjangoArtAndGraffiti/static/js/main.1806c70d.js",
+    "static/js/239.dfdb0d71.chunk.js": "/DjangoArtAndGraffiti/static/js/239.dfdb0d71.chunk.js",
+    "static/js/977.c3d99690.chunk.js": "/DjangoArtAndGraffiti/static/js/977.c3d99690.chunk.js",
+    "static/js/732.0eb8fd42.chunk.js": "/DjangoArtAndGraffiti/static/js/732.0eb8fd42.chunk.js",
     "index.html": "/DjangoArtAndGraffiti/index.html",
-    "main.65a1cea2.css.map": "/DjangoArtAndGraffiti/static/css/main.65a1cea2.css.map",
-    "main.435062fc.js.map": "/DjangoArtAndGraffiti/static/js/main.435062fc.js.map"
+    "main.2e170d71.css.map": "/DjangoArtAndGraffiti/static/css/main.2e170d71.css.map",
+    "main.1806c70d.js.map": "/DjangoArtAndGraffiti/static/js/main.1806c70d.js.map",
+    "239.dfdb0d71.chunk.js.map": "/DjangoArtAndGraffiti/static/js/239.dfdb0d71.chunk.js.map",
+    "977.c3d99690.chunk.js.map": "/DjangoArtAndGraffiti/static/js/977.c3d99690.chunk.js.map",
+    "732.0eb8fd42.chunk.js.map": "/DjangoArtAndGraffiti/static/js/732.0eb8fd42.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.65a1cea2.css",
-    "static/js/main.435062fc.js"
+    "static/css/main.2e170d71.css",
+    "static/js/main.1806c70d.js"
   ]
 }
